@@ -1,5 +1,17 @@
 <table>
     <tr *ngFor="let i of viewNeck">
+        <td *ngFor="let j of i">
+        <guitar-note 
+            #note 
+            [note]="getNoteString(j)"
+            [show]="j!=null?true:false"
+            (stateChange)="updateNotes($event)"></guitar-note>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr *ngFor="let i of viewNeck">
         <td *ngFor="let j of i">{{getNoteString(j)}}</td>
     </tr>
 </table>
@@ -14,3 +26,11 @@
 
 <div>{{root}}</div>
 <div>{{viewScale}}</div>
+
+<div>i {{viewChords[0]}}</div>
+<div>ii {{viewChords[1]}}</div>
+<div>iii {{viewChords[2]}}</div>
+<div>iv {{viewChords[3]}}</div>
+<div>v {{viewChords[4]}}</div>
+<div>vi {{viewChords[5]}}</div>
+<div>vii {{viewChords[6]}}</div>

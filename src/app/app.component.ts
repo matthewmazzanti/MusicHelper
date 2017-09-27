@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component, ViewChildren, QueryList } from '@angular/core';
+import { GuitarNoteComponent } from './guitar-note/guitar-note.component';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -7,6 +7,8 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
+    @ViewChildren('note') components:QueryList<any>;
+    
     roots = [7, 2, 10, 5, 0, 7];
     neck = [[],[],[],[],[],[]];
     viewNeck = [[],[],[],[],[],[]]
@@ -18,9 +20,16 @@ export class AppComponent {
     mode = 0;
     currSteps = [];
     
+    chords = [[]];
+    viewChords = [[]];
+
     root = 0;
     scale = [];
     viewScale = [];
+
+    state = "active";
+    state2 = "inactive";
+    B = "B";
 
     constructor() {
         this.buildNeck(this.roots);
@@ -77,6 +86,7 @@ export class AppComponent {
         }
         this.scale = newScale;
 
+        this.buildChords(this.scale);
         this.buildViewScale(this.scale);
         this.buildViewNeck(this.scale);
     }
@@ -85,4 +95,30 @@ export class AppComponent {
         this.viewScale = scale.map(this.getNoteString, this)
     }
     
+    buildChords(scale) {
+        for (let i = 0; i < 7; i++) {
+            this.chords[i] = this.buildChord(i, scale);
+            this.viewChords[i] = this.chords[i].map(this.getNoteString, this);
+        }
+    }
+
+    buildChord(root, scale) {
+        return [scale[root%8], scale[(root+2)%8], scale[(root+4)%8]];
+    }
+
+    updateNotes(e) {
+        console.log(e.state);
+        console.log(e.note);
+
+        this.components.forEach((child) => {
+            if(e.note == child.note) {
+                if(e.state == "active") {
+                    child.on();
+                } else {
+                    child.off();
+                }
+            }
+        });
+                    
+    }
 }
